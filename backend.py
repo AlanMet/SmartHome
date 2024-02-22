@@ -14,7 +14,7 @@ class SmartDevice:
 
 class SmartPlug(SmartDevice):
     def __init__(self, rate):
-        super.__init__()
+        super().__init__()
         self.consumptionRate = rate
 
     def getConsumptionRate(self):
@@ -28,14 +28,18 @@ class SmartPlug(SmartDevice):
         if self.switchedOn == True:
             switch = "on"
 
-        return f"plug status: switched {switch}\nconsumption rate: {self.consumptionRate}"
+        return f"Plug: {switch}, consumption: {self.consumptionRate}"
 
 
 class SmartFridge(SmartDevice):
-    def __init__(self):
+    def __init__(self, temp):
         super().__init__()
-        #default value from the document
-        self.temperature = 3
+        temps = [3, 4, 7]
+        if temp in temps:
+            self.temperature = temp
+        else:
+            #default value from the document
+            self.temperature = 3
 
     def getTemperature(self):
         return self.temperature
@@ -50,7 +54,7 @@ class SmartFridge(SmartDevice):
         if self.switchedOn == True:
             switch = "on"
 
-        return f"plug status: switched {switch}\nconsumption rate: {self.temp}"
+        return f"Fridge: {switch}, Temperature: {self.temperature}"
     
 
 class SmartHome:
@@ -81,7 +85,11 @@ class SmartHome:
                 device.toggleSwitch()
 
     def __str__(self):
-        pass
+        output = "Devices: \n"
+        for device in self.devices:
+            output += device.__str__() + "\n"
+        return output
+
 
 def testSmartPlug():
     plug = SmartPlug(45)
@@ -92,4 +100,33 @@ def testSmartPlug():
     print(plug.getConsumptionRate())
     print(plug)
 
+def testSmartFridge():
+    fridge = SmartFridge()
+    fridge.toggleSwitch()
+    print(fridge.getSwitchedOn())
+    print(fridge.getTemperature())
+    fridge.setTemperature(7)
+    print(fridge.getTemperature())
+    print(fridge)
 
+def testSmartHome():
+    home = SmartHome()
+    plug1 = SmartPlug(45)
+    plug2 = SmartPlug(45)
+    fridge = SmartFridge()
+    plug1.toggleSwitch()
+    plug1.setConsumptionRate(150)
+    plug2.setConsumptionRate(25)
+    fridge.setTemperature(7)
+    home.addDevice(plug1)
+    home.addDevice(plug2)
+    home.addDevice(fridge)
+    home.getDeviceAt(1).toggleSwitch()
+    print(home)
+    home.turnOnAll()
+    print(home)
+
+
+#testSmartPlug()
+#testSmartFridge()
+#testSmartHome()
