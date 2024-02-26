@@ -71,6 +71,9 @@ class SmartHome:
     def addDevice(self, device):
         self.devices.append(device)
 
+    def removeDeviceAt(self, index):
+        del self.devices[index]
+
     def toggleSwitch(self, index):
         self.devices[index].toggleSwitch()
 
