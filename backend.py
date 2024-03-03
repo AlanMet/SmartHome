@@ -11,7 +11,6 @@ class SmartDevice:
     def getSwitchedOn(self):
         return self.switchedOn
 
-
 class SmartPlug(SmartDevice):
     def __init__(self, rate):
         super().__init__()
@@ -30,12 +29,11 @@ class SmartPlug(SmartDevice):
 
         return f"Plug: {switch}, consumption: {self.consumptionRate}"
 
-
 class SmartFridge(SmartDevice):
     def __init__(self, temp):
         super().__init__()
-        temps = [3, 4, 7]
-        if temp in temps:
+        self.temps = [1, 3, 5]
+        if temp in self.temps:
             self.temperature = temp
         else:
             #default value from the document
@@ -45,8 +43,7 @@ class SmartFridge(SmartDevice):
         return self.temperature
     
     def setTemperature(self, temp):
-        temps = [3, 4, 7]
-        if temp in temps:
+        if temp in self.temps:
             self.temperature = temp
 
     def __str__(self):
