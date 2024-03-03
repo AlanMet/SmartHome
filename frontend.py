@@ -5,16 +5,26 @@ class AddSystem:
     def __init__(self, win: Tk, home: SmartHome,  topLayer):
         self.win = Toplevel(win)
         self.win.geometry('250x300')
+        self.radio = IntVar()
+        self.widgets = []
         self.createWidgets()
 
     def createWidgets(self):
         self.label = Label(self.win, text="Add Device")
         self.label.grid(row=1, column=2)
 
-        radio = Radio(self.win, 2, 2, "Type", ["Fridge", "Plug"])
-
+        label = Label(self.win, text="Type")
+        label.grid(row=2, column=1)
         
+        self.widgets.append(Radiobutton(self.win, text="Fridge", variable=self.radio, value="Fridge", command=self.setFridge).grid(row=2, column=2))
+        self.widgets.append(Radiobutton(self.win, text="Plug", variable=self.radio, value="Plug", command=self.setPlug).grid(row=2, column=3))    
 
+    def setPlug(self):
+        print("Hello")
+        pass
+
+    def setFridge(self):
+        pass
 
 class Slider:
     def __init__(self, win, row, column, lower, higher, name, default):
@@ -74,6 +84,7 @@ class Radio:
         self.widgets = []
         self.createWidgets()
 
+    #needed to make the radio for add page but not possible as result of acting differently 
     def checkType(self):
         for x in self.values:
             if type(x) == str:
