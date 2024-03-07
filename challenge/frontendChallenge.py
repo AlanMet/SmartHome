@@ -217,9 +217,9 @@ class ScheduleSystem:
         elif self.onBox.get() == self.offBox.get():
             messagebox.showerror('Value Error', 'Error: Times cannot be the same!')
         else:
-            if self.offBox.get() is not '':
+            if self.offBox.get() != '':
                 self.smartObject.setTurnOff(int(self.offBox.get()))
-            if self.onBox.get() is not '':
+            if self.onBox.get() != '':
                 self.smartObject.setTurnOn(int(self.onBox.get()))
             self.win.destroy()
             self.topLayer.createWidgets()
@@ -239,6 +239,7 @@ class SmartHomeSystem:
         self.toggleVariable.set("Turn on all")
         self.rowWidgets = []
         self.sideWidgets = []
+        self.colours = ["", "red"]
 
     def run(self):
         self.createWidgets()
