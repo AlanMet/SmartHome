@@ -4,9 +4,12 @@ from tkinter import *
 class AddSystem:
     def __init__(self, win: Tk, home: SmartHome,  topLayer):
         self.win = Toplevel(win)
-        self.win.geometry('250x300')
-        self.radio = IntVar()
+        self.home = home
+        self.topLayer = topLayer
+        self.win.geometry('250x100')
+        self.radio = StringVar()
         self.widgets = []
+        self.optionWidget = None
         self.createWidgets()
 
     def createWidgets(self):
@@ -17,14 +20,38 @@ class AddSystem:
         label.grid(row=2, column=1)
         
         self.widgets.append(Radiobutton(self.win, text="Fridge", variable=self.radio, value="Fridge", command=self.setFridge).grid(row=2, column=2))
-        self.widgets.append(Radiobutton(self.win, text="Plug", variable=self.radio, value="Plug", command=self.setPlug).grid(row=2, column=3))    
+        self.widgets.append(Radiobutton(self.win, text="Plug", variable=self.radio, value="Plug", command=self.setPlug).grid(row=2, column=3))
+
+        submitButton = Button(self.win, text="Submit", width=10, command=self.submit)
+        submitButton.grid(column=2, row=4)
 
     def setPlug(self):
-        print("Hello")
-        pass
-
+        self.deleteAll()
+        slider = Slider(self.win, 3, 2, 0, 150, "Consumption", 150)
+        self.optionWidget = slider
+        
     def setFridge(self):
-        pass
+        self.deleteAll()
+        radio = Radio(self.win, 3, 2, "Temperature", [1, 3, 5])
+        self.optionWidget = radio
+
+    def submit(self):
+        if self.optionWidget is not None:
+            value = self.optionWidget.get()
+            if self.radio.get() == "Fridge":
+                self.home.addDevice(SmartFridge(value))
+            else:
+                self.home.addDevice(SmartPlug(value))
+
+            self.topLayer.createWidgets()
+            self.win.destroy()
+
+    def deleteAll(self):
+        try:
+            self.optionWidget.destroy()
+            self.optionWidget = None
+        except AttributeError:
+            return
 
 class Slider:
     def __init__(self, win, row, column, lower, higher, name, default):
@@ -39,8 +66,8 @@ class Slider:
         self.createWidgets()
             
     def createWidgets(self):
-        label = Label(self.win, text=self.name)
-        label.grid(row=self.row, column=self.column-1)
+        self.label = Label(self.win, text=self.name)
+        self.label.grid(row=self.row, column=self.column-1)
         self.scale = Scale(self.win, orient=HORIZONTAL, from_=self.lower, to=self.higher, variable=self.consumption, showvalue=0)
         self.scale.grid(row=self.row, column=self.column)
 
@@ -66,10 +93,15 @@ class Slider:
         self.scaleEntry.delete(0, END)
         self.scaleEntry.insert(0, self.consumption.get())
 
-    def getSliderValue(self):
+    def get(self):
         return self.consumption.get()
     
     def clearSlider(self):
+        self.scale.destroy()
+        self.scaleEntry.destroy()
+
+    def destroy(self):
+        self.label
         self.scale.destroy()
         self.scaleEntry.destroy()
     
@@ -96,12 +128,14 @@ class Radio:
         label = Label(self.win, text=self.name)
         label.grid(row=self.row, column=self.column-1)
         for x in range(0, len(self.values)):
-            self.widgets.append(Radiobutton(self.win, text=str(self.values[x]), variable=self.radio, value=self.values[x]).grid(row=self.row, column=self.column+x))
+            radio = Radiobutton(self.win, text=str(self.values[x]), variable=self.radio, value=self.values[x])
+            radio.grid(row=self.row, column=self.column+x)
+            self.widgets.append(radio)
     
-    def getRadioValue(self):
+    def get(self):
         return self.radio.get()
     
-    def clearRadio(self):
+    def destroy(self):
         for x in self.widgets:
             x.destroy()
 
@@ -126,9 +160,9 @@ class EditSystem:
 
     def submit(self):
         if self.objectType == "SmartFridge":
-            self.smartObject.setTemperature(self.radio.getRadioValue())
+            self.smartObject.setTemperature(self.radio.get())
         else:
-            self.smartObject.setConsumptionRate(self.slider.getSliderValue())
+            self.smartObject.setConsumptionRate(self.slider.get())
         self.win.destroy()
         self.topLayer.createWidgets()
 

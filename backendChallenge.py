@@ -1,7 +1,37 @@
-class SmartPlug:
-    def __init__(self, rate):
-        self.consumptionRate = rate
+class SmartDevice:
+    def __init__(self):
+        self.TurnOff = None
+        self.TurnOn = None
         self.switchedOn = False
+
+    def toggleSwitch(self):
+        if self.switchedOn == True:
+            self.switchedOn = False
+        else:
+            self.switchedOn = True
+
+    def getTurnOn(self):
+        return self.TurnOn
+    
+    def getTurnOff(self):
+        return self.TurnOff
+
+    def setTurnOff(self, value):
+        self.TurnOff = value
+
+    def setTurnOn(self, value):
+        self.TurnOn = value
+
+    def setSwitchedOn(self, value):
+        self.switchedOn = value
+
+    def getSwitchedOn(self):
+        return self.switchedOn
+
+class SmartPlug(SmartDevice):
+    def __init__(self, rate):
+        super().__init__()
+        self.consumptionRate = rate
 
     def getConsumptionRate(self):
         return self.consumptionRate
@@ -9,40 +39,27 @@ class SmartPlug:
     def setConsumptionRate(self, rate):
         self.consumptionRate = rate
 
-    def toggleSwitch(self):
-        if self.switchedOn == True:
-            self.switchedOn = False
-        else:
-            self.switchedOn = True
-
-    def getSwitchedOn(self):
-        return self.switchedOn
-
     def __str__(self):
         switch = "off"
         if self.switchedOn == True:
             switch = "on"
 
-        return f"Plug: {switch}, consumption: {self.consumptionRate}"
+        return f"consumption: {self.consumptionRate}"
+    
+    def getImage(self):
+        if self.switchedOn:
+            return "./images/PlugOn.gif"
+        return "./images/PlugOff.gif"
 
-class SmartFridge:
+class SmartFridge(SmartDevice):
     def __init__(self, temp):
+        super().__init__()
         self.temps = [1, 3, 5]
         if temp in self.temps:
             self.temperature = temp
         else:
             #default value from the document
             self.temperature = 3
-        self.switchedOn = False
-
-    def toggleSwitch(self):
-        if self.switchedOn == True:
-            self.switchedOn = False
-        else:
-            self.switchedOn = True
-
-    def getSwitchedOn(self):
-        return self.switchedOn
 
     def getTemperature(self):
         return self.temperature
@@ -56,8 +73,12 @@ class SmartFridge:
         if self.switchedOn == True:
             switch = "on"
 
-        return f"Fridge: {switch}, Temperature: {self.temperature}"
+        return f"Temperature: {self.temperature}"
     
+    def getImage(self):
+        if self.switchedOn:
+            return "./images/FridgeOn.gif"
+        return "./images/FridgeOff.gif"
 
 class SmartHome:
     def __init__(self):
